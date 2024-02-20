@@ -254,7 +254,7 @@ class GageRnR(Statistics):
         squares = self.calculateSquares()
         SD = dict()
         for key in squares:
-            SD[key] = np.sum(squares[key])
+            SD[key] = np.nansum(squares[key])
         return SD
 
     def calculateSS(self):
@@ -272,6 +272,8 @@ class GageRnR(Statistics):
                 SS[Component.OPERATOR] +
                 SS[Component.PART] +
                 SS[Component.MEASUREMENT])
+        if SS[Component.OPERATOR_BY_PART] < 0:
+            SS[Component.OPERATOR_BY_PART] = 0
         if self.omit_interaction:
             SS[Component.MEASUREMENT] += SS[Component.OPERATOR_BY_PART]
         return SS
@@ -305,7 +307,7 @@ class GageRnR(Statistics):
         else:
             Var[Component.OPERATOR] = ((
                 MS[Component.OPERATOR] - MS[Component.MEASUREMENT]) / (self.parts * self.measurements))
-
+            
         #  σ2_Parts = (MS_Parts - MS_Operator_by_Part) / (N_Operators * N_Trials)
         if not self.omit_interaction:
             Var[Component.PART] = ((

@@ -52,6 +52,7 @@ class Statistics(object):
         self.parts = data.shape[1]
         self.operators = data.shape[0]
         self.measurements = data.shape[2]
+        self.measurements_dof = np.count_nonzero(~np.isnan(data))/(data.shape[1]*data.shape[0])
         if labels is None:
             self.labels = {}
         else:
@@ -158,15 +159,15 @@ class Statistics(object):
 
     def calculateMean(self):
         """Calculate Mean."""
-        mu = np.array([np.mean(self.data)])
+        mu = np.array([np.nanmean(self.data)])
 
-        omu = np.mean(self.data, axis=1)
-        omu = np.mean(omu, axis=1)
+        omu = np.nanmean(self.data, axis=1)
+        omu = np.nanmean(omu, axis=1)
 
-        pmu = np.mean(self.data, axis=0)
-        pmu = np.mean(pmu, axis=1)
+        pmu = np.nanmean(self.data, axis=0)
+        pmu = np.nanmean(pmu, axis=1)
 
-        emu = np.mean(self.data, axis=2)
+        emu = np.nanmean(self.data, axis=2)
         emu = emu.reshape(self.parts * self.operators)
 
         return {
@@ -176,12 +177,12 @@ class Statistics(object):
             Component.MEASUREMENT: emu}
 
     def calculateStd(self):
-        std = np.array([np.std(self.data, ddof=1)])
-        stdo = np.std(
+        std = np.array([np.nanstd(self.data, ddof=1)])
+        stdo = np.nanstd(
             self.dataToOperators(),
             axis=1,
             ddof=1)
-        stdp = np.std(
+        stdp = np.nanstd(
             self.dataToParts(),
             axis=1,
             ddof=1)
