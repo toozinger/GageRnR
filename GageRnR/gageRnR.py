@@ -79,7 +79,6 @@ class GageRnR(Statistics):
             'Total Gage R&R' : self.result[Result.Var][GageRnR.GRR],
             'Repeatability'  : self.result[Result.Var][Component.MEASUREMENT],
             'Reproducibility': self.result[Result.Var][Component.OPERATOR],
-            'Operator'       : self.result[Result.Var][Component.OPERATOR],
         }
         if not self.omit_interaction:
                 grr_variance_data['Reproducibility'] += self.result[Result.Var][Component.OPERATOR_BY_PART]
